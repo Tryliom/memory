@@ -29,13 +29,13 @@ class Memory extends StatefulWidget {
 
 class _Memory extends State<Memory> {
   List<Card> _list = [];
-  List<GestureDetector> _listContainers = [];
+  List<Column> _listColumns = [];
   bool canPlay = true;
 
   List<Card> initCards() {
     List<Card> list = [];
 
-    for (int i = 1;i<=5;i++) {
+    for (int i = 1;i<=35;i++) {
       list.add(new Card(hidden: true, found: false, name: "$i"));
       list.add(new Card(hidden: true, found: false, name: "$i"));
     }
@@ -78,6 +78,7 @@ class _Memory extends State<Memory> {
 
   void updateDisplayCards() {
     List<GestureDetector> list = [];
+    List<Column> listColumns = [];
 
     for (Card card in this._list) {
       list.add(new GestureDetector(
@@ -91,19 +92,25 @@ class _Memory extends State<Memory> {
           },
           child: Center(
               child: new Container(
-                width: 50,
-                height: 50,
-                padding: const EdgeInsets.only(left: 20, top: 19),
+                width: 47,
+                height: 47,
+                padding: const EdgeInsets.only(left: 17, top: 16),
                 margin: const EdgeInsets.all(5),
                 child: Text(card.hidden && !card.found ? "H" : card.name),
                 color: card.found ? Colors.green : Colors.amber,
               )
           )
       ));
+
+      if (list.length % 10 == 0 && list.length != 0) {
+        listColumns.add(Column(children: List.from(list)));
+        list.clear();
+      }
+
     }
 
     setState(() {
-      this._listContainers = list;
+      this._listColumns = listColumns;
     });
   }
 
@@ -114,8 +121,8 @@ class _Memory extends State<Memory> {
         title: Text(widget.title),
       ),
       body: Center(
-        child: Column(
-          children: _listContainers,
+        child: Row(
+          children: this._listColumns,
         ),
       ),
       floatingActionButton: FloatingActionButton(
